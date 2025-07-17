@@ -1,64 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Countdown to 8 PM IST Tomorrow</title>
-  <link href="https://fonts.cdnfonts.com/css/press-start-2p" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown to 8PM IST - 18 July 2025</title>
   <style>
     body {
       background-color: black;
       color: red;
-      font-family: 'Press Start 2P', monospace;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      font-size: 6rem;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 2rem;
       text-align: center;
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div id="timer">Loading...</div>
+  <div id="countdown">Loading...</div>
 
   <script>
-    function getISTNow() {
-      const now = new Date();
-      // Convert to IST (UTC+5:30)
-      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-      return new Date(utc + (5.5 * 60 * 60 * 1000));
-    }
-
-    function getTargetTimeIST() {
-      const istNow = getISTNow();
-      const target = new Date(istNow);
-      target.setDate(istNow.getDate() + 1);
-      target.setHours(20, 0, 0, 0); // 8:00 PM IST tomorrow
-      return target;
-    }
-
-    const countdownElement = document.getElementById("timer");
-    const targetTime = getTargetTimeIST();
+    // Set target time: 8 PM IST (UTC+5:30) on 18 July 2025
+    const targetIST = new Date('2025-07-18T20:00:00+05:30').getTime();
 
     function updateCountdown() {
-      const now = getISTNow();
-      const diff = targetTime - now;
+      const now = new Date().getTime();
+      const distance = targetIST - now;
 
-      if (diff <= 0) {
-        countdownElement.textContent = "00:00:00";
+      if (distance <= 0) {
+        document.getElementById('countdown').innerText = "00:00:00:00";
         clearInterval(timerInterval);
         return;
       }
 
-      const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
-      const minutes = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
-      const seconds = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      countdownElement.textContent = `${hours}:${minutes}:${seconds}`;
+      const format = n => n.toString().padStart(2, '0');
+      document.getElementById('countdown').innerText =
+        `${format(days)}:${format(hours)}:${format(minutes)}:${format(seconds)}`;
     }
 
+    updateCountdown(); // initial call
     const timerInterval = setInterval(updateCountdown, 1000);
-    updateCountdown();
   </script>
 </body>
 </html>
